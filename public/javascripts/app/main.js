@@ -4,6 +4,7 @@ app.main = (function(window,document) {
   var _width, _height;
   var _renderer, _scene, _camera;
   var _lightTop;
+  var _p1 = {}, _p2 = {};
 
   var _cacheBrowserVariables = function() {
     _width = window.innerWidth;
@@ -32,6 +33,7 @@ app.main = (function(window,document) {
     _renderer.shadowMapHeight = 1024;
 
     _scene = new Physijs.Scene;
+    _scene.setGravity(new THREE.Vector3(0,-50,0));
     _scene.add(_camera);
     
     $('#container').append(_renderer.domElement);
@@ -49,18 +51,41 @@ app.main = (function(window,document) {
     );
     floor.receiveShadow = true;
 
-    var cube = new Physijs.BoxMesh(
-      new THREE.CubeGeometry(50,50,50),
-      new THREE.MeshLambertMaterial({color:0xFF3300})
-    );
-    cube.position.set(0,200,0);
-    cube.castShadow = true;
-    cube.rotation.z = Math.PI / 3;
+    _makeDude();
 
     _scene.add(_lightTop);
     _scene.add(floor);
-    _scene.add(cube);
   }
+
+  var _makeDude = function() {
+    _p1.body = new Physijs.BoxMesh(
+      new THREE.CubeGeometry(20,100,50),
+      new THREE.MeshLambertMaterial({color:0xFF3300})
+    );
+    _p1.body.position.set(-150,200,0);
+    _p1.body.castShadow = true;
+
+    _p1.arm = new Physijs.BoxMesh(
+      new THREE.CubeGeometry(10,60,10),
+      new THREE.MeshLambertMaterial({color:0xFF3300})
+    );
+    _p1.arm.position.set(_p1.body.position.x, _p1.body.position.y, _p1.body.position.z + 30)
+    _p1.arm.castShadow = true;
+
+    _p1.constraint = new Physijs.ConeTwistConstraint(
+      _p1.body,
+      _p1.arm,
+      new THREE.Vector3(_p1.body.position.x, _p1.body.position.y, _p1.body.position.z + 30)
+    );
+
+    _scene.add(_p1.body);
+    _scene.add(_p1.arm);
+    _scene.addConstraint(_p1.constraint);
+  };
+
+  var _addListeners = function() {
+
+  };
 
   var _render = function() {
     _scene.simulate();
@@ -74,6 +99,7 @@ app.main = (function(window,document) {
       _initPhysiJS();
       _initThree();
       _fillScene();
+      _addListeners();
       
       requestAnimationFrame(_render);
     }
