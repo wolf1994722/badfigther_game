@@ -33,7 +33,7 @@ app.main = (function(window,document) {
     _renderer.shadowMapHeight = 1024;
 
     _scene = new Physijs.Scene;
-    _scene.setGravity(new THREE.Vector3(0,-50,0));
+    _scene.setGravity(new THREE.Vector3(0,-100,0));
     _scene.add(_camera);
     
     $('#container').append(_renderer.domElement);
@@ -51,40 +51,80 @@ app.main = (function(window,document) {
     );
     floor.receiveShadow = true;
 
-    _makeDude();
+    _makeDude(_p1, 0xFF3300, new THREE.Vector3(-150,200,0));
+    _makeDude(_p2, 0x0033FF, new THREE.Vector3(150,200,0));
 
     _scene.add(_lightTop);
     _scene.add(floor);
   }
 
-  var _makeDude = function() {
-    _p1.body = new Physijs.BoxMesh(
+  var _makeDude = function(player, color, position) {
+    player.body = new Physijs.BoxMesh(
       new THREE.CubeGeometry(20,100,50),
-      new THREE.MeshLambertMaterial({color:0xFF3300})
+      new THREE.MeshLambertMaterial({color:color})
     );
-    _p1.body.position.set(-150,200,0);
-    _p1.body.castShadow = true;
+    player.body.position.set(position.x, position.y, position.z);
+    player.body.castShadow = true;
 
-    _p1.arm = new Physijs.BoxMesh(
+    player.frontArm = new Physijs.BoxMesh(
       new THREE.CubeGeometry(10,60,10),
-      new THREE.MeshLambertMaterial({color:0xFF3300})
+      new THREE.MeshLambertMaterial({color:color})
     );
-    _p1.arm.position.set(_p1.body.position.x, _p1.body.position.y, _p1.body.position.z + 30)
-    _p1.arm.castShadow = true;
+    player.frontArm.position.set(player.body.position.x, player.body.position.y, player.body.position.z + 35)
+    player.frontArm.castShadow = true;
 
-    _p1.constraint = new Physijs.ConeTwistConstraint(
-      _p1.body,
-      _p1.arm,
-      new THREE.Vector3(_p1.body.position.x, _p1.body.position.y, _p1.body.position.z + 30)
+    player.rearArm = new Physijs.BoxMesh(
+      new THREE.CubeGeometry(10,60,10),
+      new THREE.MeshLambertMaterial({color:color})
+    );
+    player.rearArm.position.set(player.body.position.x, player.body.position.y, player.body.position.z - 35)
+    player.rearArm.castShadow = true;
+
+    _scene.add(player.body);
+    _scene.add(player.frontArm);
+    _scene.add(player.rearArm);
+
+    player.frontConstraint = new Physijs.ConeTwistConstraint(
+      player.body,
+      player.frontArm,
+      new THREE.Vector3(player.body.position.x, player.body.position.y + 30, player.body.position.z + 35)
     );
 
-    _scene.add(_p1.body);
-    _scene.add(_p1.arm);
-    _scene.addConstraint(_p1.constraint);
+    player.rearConstraint = new Physijs.ConeTwistConstraint(
+      player.body,
+      player.rearArm,
+      new THREE.Vector3(player.body.position.x, player.body.position.y + 30, player.body.position.z - 35)
+    );
+
+    _scene.addConstraint(player.frontConstraint);
+    _scene.addConstraint(player.rearConstraint);
+
+    player.frontConstraint.setMaxMotorImpulse(50);
+    player.rearConstraint.setMaxMotorImpulse(50);
+  };
+
+  var _applyImpulse = function(constraint, target) {
+    constraint.setMotorTarget(target);
+    constraint.enableMotor();
   };
 
   var _addListeners = function() {
-
+    $(window).keypress(function(e) {
+      switch(e.charCode) {
+        case 97: //a
+          _applyImpulse(_p1.frontConstraint, _p2.body.position);
+          break;
+        case 113: //q
+          _applyImpulse(_p1.rearConstraint, _p2.body.position);
+          break;
+        case 108: //l
+          _applyImpulse(_p2.frontConstraint, _p1.body.position);
+          break;
+        case 111: //o
+          _applyImpulse(_p2.rearConstraint, _p1.body.position);
+          break;
+      }
+    });
   };
 
   var _render = function() {
