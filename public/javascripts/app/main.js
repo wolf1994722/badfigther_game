@@ -103,25 +103,51 @@ app.main = (function(window,document) {
     player.rearConstraint.setMaxMotorImpulse(50);
   };
 
-  var _applyImpulse = function(constraint, target) {
+  var _activateMotor = function(constraint, target) {
     constraint.setMotorTarget(target);
     constraint.enableMotor();
   };
 
+  var _applyImpulse = function(object, target) {
+    var force = target.clone().sub(object.position).normalize().multiplyScalar(2000);
+    object.setLinearVelocity(force);
+  };
+
   var _addListeners = function() {
-    $(window).keypress(function(e) {
-      switch(e.charCode) {
-        case 97: //a
-          _applyImpulse(_p1.frontConstraint, _p2.body.position);
+    $(window).keydown(function(e) {
+      switch(e.keyCode) {
+        case 65: //a
+          //_activateMotor(_p1.frontConstraint, _p2.body.position);
+          _applyImpulse(_p1.frontArm, _p2.frontArm.position);
           break;
-        case 113: //q
-          _applyImpulse(_p1.rearConstraint, _p2.body.position);
+        case 81: //q
+          //_activateMotor(_p1.rearConstraint, _p2.body.position);
+          _applyImpulse(_p1.rearArm, _p2.rearArm.position);
           break;
-        case 108: //l
-          _applyImpulse(_p2.frontConstraint, _p1.body.position);
+        case 76: //l
+          //_activateMotor(_p2.frontConstraint, _p1.body.position);
+          _applyImpulse(_p2.frontArm, _p1.frontArm.position);
           break;
-        case 111: //o
-          _applyImpulse(_p2.rearConstraint, _p1.body.position);
+        case 79: //o
+          //_activateMotor(_p2.rearConstraint, _p1.body.position);
+          _applyImpulse(_p2.rearArm, _p1.rearArm.position);
+          break;
+      }
+    });
+
+    $(window).keyup(function(e) {
+      switch(e.keyCode) {
+        case 65: //a
+          _p1.frontConstraint.disableMotor();
+          break;
+        case 81: //q
+          _p1.rearConstraint.disableMotor();
+          break;
+        case 76: //l
+          _p2.frontConstraint.disableMotor();
+          break;
+        case 79: //o
+          _p2.rearConstraint.disableMotor();
           break;
       }
     });
