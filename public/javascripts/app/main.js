@@ -2,13 +2,17 @@ var app = app || {};
 
 app.main = (function(window,document) {
   var _width, _height;
-  var _renderer, _scene, _camera;
+  var _renderer, _scene, _camera, _newRound = false;
   var _lightTop;
   var _p1 = {}, _p2 = {};
-
-  var _cacheBrowserVariables = function() {
+  var _p1score = 0, _p2score = 0, _$p1score, _$p2score;
+  
+  var _cache = function() {
     _width = window.innerWidth;
     _height = window.innerHeight;
+
+    _$p1score = $('#p1score h1');
+    _$p2score = $('#p2score h1');
   }
 
   var _initPhysiJS = function() {
@@ -59,6 +63,8 @@ app.main = (function(window,document) {
   }
 
   var _makeDude = function(player, color, position) {
+    player.startPosition = position;
+
     player.body = new Physijs.BoxMesh(
       new THREE.CubeGeometry(20,100,50),
       new THREE.MeshLambertMaterial({color:color})
@@ -153,7 +159,105 @@ app.main = (function(window,document) {
     });
   };
 
+  var _checkBounds = function() {
+    var p1y = _p1.body.position.y;
+    var p2y = _p2.body.position.y;
+
+    var p1out = false, p2out = false;
+
+    if(p1y < -10) {
+      p1out = true;
+      _p2score++;
+    }
+    
+    if(p2y < -10) {
+      p2out = true;
+      _p1score++;
+    }
+
+    _updateScores();
+    if(p1out || p2out) _resetGame();
+  };
+
+  var _updateScores = function() {
+    _$p1score.text(_p1score);
+    _$p2score.text(_p2score);
+  };
+
+  var _resetGame = function() {
+    _newRound = true;
+
+    _resetPlayer(_p1);
+    _resetPlayer(_p2);
+  };
+
+  var _resetPlayer = function(player) {
+    player.body.position.set(player.startPosition.x, player.startPosition.y, player.startPosition.z);
+    player.frontArm.position.set(player.startPosition.x, player.startPosition.y + 30, player.startPosition.z + 35);
+    player.rearArm.position.set(player.startPosition.x, player.startPosition.y + 30, player.startPosition.z - 35);
+    
+    player.body.rotation = new THREE.Euler(0,0,0,'XYZ');
+    player.frontArm.rotation = new THREE.Euler(0,0,0,'XYZ');
+    player.rearArm.rotation = new THREE.Euler(0,0,0,'XYZ');
+    
+    player.body.setAngularFactor(new THREE.Vector3(0,0,0));
+    player.body.setLinearFactor(new THREE.Vector3(0,0,0));
+
+    player.frontArm.setAngularFactor(new THREE.Vector3(0,0,0));
+    player.frontArm.setLinearFactor(new THREE.Vector3(0,0,0));
+
+    player.rearArm.setAngularFactor(new THREE.Vector3(0,0,0));
+    player.rearArm.setLinearFactor(new THREE.Vector3(0,0,0));
+
+    player.body.setAngularVelocity(new THREE.Vector3(0,0,0));
+    player.body.setLinearVelocity(new THREE.Vector3(0,0,0));
+
+    player.frontArm.setAngularVelocity(new THREE.Vector3(0,0,0));
+    player.frontArm.setLinearVelocity(new THREE.Vector3(0,0,0));
+
+    player.rearArm.setAngularVelocity(new THREE.Vector3(0,0,0));
+    player.rearArm.setLinearVelocity(new THREE.Vector3(0,0,0));
+
+    player.body.__dirtyPosition = true;
+    player.body.__dirtyRotation = true;
+
+    player.frontArm.__dirtyPosition = true;
+    player.frontArm.__dirtyRotation = true;
+
+    player.rearArm.__dirtyPosition = true;
+    player.rearArm.__dirtyRotation = true;
+  }
+
+  var _enablePlayer = function(player) {
+    player.body.__dirtyPosition = false;
+    player.body.__dirtyRotation = false;
+
+    player.frontArm.__dirtyPosition = false;
+    player.frontArm.__dirtyRotation = false;
+
+    player.rearArm.__dirtyPosition = false;
+    player.rearArm.__dirtyRotation = false;
+
+    player.body.setAngularFactor(new THREE.Vector3(1,1,1));
+    player.body.setLinearFactor(new THREE.Vector3(1,1,1));
+
+    player.frontArm.setAngularFactor(new THREE.Vector3(1,1,1));
+    player.frontArm.setLinearFactor(new THREE.Vector3(1,1,1));
+
+    player.rearArm.setAngularFactor(new THREE.Vector3(1,1,1));
+    player.rearArm.setLinearFactor(new THREE.Vector3(1,1,1));
+  };
+
   var _render = function() {
+    if(_newRound) {
+      _enablePlayer(_p1);
+      _enablePlayer(_p2);
+
+      _newRound = false;
+    }
+
+    _checkBounds();
+
     _scene.simulate();
     _renderer.render(_scene, _camera);
     requestAnimationFrame(_render);
@@ -161,7 +265,7 @@ app.main = (function(window,document) {
 
   var self = {
     init: function() {
-      _cacheBrowserVariables();
+      _cache();
       _initPhysiJS();
       _initThree();
       _fillScene();

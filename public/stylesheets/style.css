@@ -1,0 +1,10 @@
+body { font-family: Comic Sans, Comic Sans MS, cursive;}
+
+.score { position: absolute; top: 20px; }
+.score h1 { font-size: 300%; font-weight: bold; }
+.score h2 { margin-bottom: 12px; }
+
+.key { background-color: #E3E3E3; border-radius: 6px; display: inline-block; height: 18px; margin: 0 6px; padding: 6px; text-align: center; width: 18px; }
+
+#p1score { color: #F30; left: 20px; }
+#p2score { color: #03F; right: 20px; text-align: right; }
