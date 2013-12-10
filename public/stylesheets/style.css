@@ -1,4 +1,4 @@
-body { font-family: Comic Sans, Comic Sans MS, cursive;}
+body { background-color: #000; font-family: Comic Sans, Comic Sans MS, cursive;}
 
 .score { position: absolute; top: 20px; }
 .score h1 { font-size: 300%; font-weight: bold; }
@@ -8,3 +8,9 @@ body { font-family: Comic Sans, Comic Sans MS, cursive;}
 
 #p1score { color: #F30; left: 20px; }
 #p2score { color: #03F; right: 20px; text-align: right; }
+
+footer { background-color: rgba(255,255,255,0.5); bottom: 0; padding: 4px 0; position: absolute; width: 100%; }
+footer a { color: #000; }
+footer p { float: left; margin-left: 20px; }
+footer ul { float: right; margin-right: 20px; }
+footer ul li { display: inline; margin-left: 12px; }
