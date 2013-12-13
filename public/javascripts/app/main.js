@@ -12,6 +12,10 @@ app.main = (function(window,document) {
   var fightMap = document.getElementById('fight');
   var awesomeMap = document.getElementById('awesome');
   var superAwesomeMap = document.getElementById('superAwesome');
+  var radMap = document.getElementById('radical');
+  var tubeMap = document.getElementById('tubular');
+  var exMap = document.getElementById('exclaimation');
+
   var _maxAwesomeBlocks = 500;
 
   var context = document.getElementById('c').getContext('2d');
@@ -246,10 +250,19 @@ app.main = (function(window,document) {
             _textToBlocks(player, fightMap);
             break;
           case 2:
-            _textToBlocks(player, awesome);
+            _textToBlocks(player, awesomeMap);
             break;
           case 3: 
-            _textToBlocks(player, superAwesome);
+            _textToBlocks(player, exMap);
+            break;
+            case 4: 
+            _textToBlocks(player, radMap);
+            break;
+            case 5: 
+            _textToBlocks(player, tubeMap);
+            break;
+            case 6: 
+            _textToBlocks(player, superAwesomeMap);
             break;
         }
         player.awesomeBool = false;
