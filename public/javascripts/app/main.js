@@ -389,23 +389,20 @@ app.main = (function(window,document) {
       if(_scene.children[i].name == "awesomeText")numAwesomes++;
       if( _scene.children[i].position.y < -100 && _scene.children[i].name == "awesomeText" )_scene.remove(_scene.children[i]);
     }
-    console.log(numAwesomes);
+    
     if(numAwesomes>_maxAwesomeBlocks){
       for(var i=0;i<_scene.children.length;i++){
         if(_scene.children[i].name == "awesomeText"){
           if(numAwesomes>_maxAwesomeBlocks){
           _scene.remove(_scene.children[i]);
           numAwesomes--;
-        }else{
-          break;
-        }
+          } else {
+            break;
+          }
         }
       }
     }
-        console.log(numAwesomes);
-
-
-  }
+  };
 
   var _beginCountdown = function() {
     var maps = [_fightMap, _countdown1Map, _countdown2Map, _countdown3Map];
