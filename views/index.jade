@@ -1,11 +1,5 @@
 extends layout
 
-block scripts
-  script(type="text/javascript", src="/javascripts/plugins/jquery-2.0.3.min.js")
-  script(type="text/javascript", src="/javascripts/plugins/three.js")
-  script(type="text/javascript", src="/javascripts/plugins/physi.js")
-  script(type="text/javascript", src="/javascripts/app/main.js")
-
 block content
   div(id="container")
 
@@ -15,6 +9,7 @@ block content
       span(class="key") Q
       span(class="key") A
     h1 0
+    h2(id="p1hit")
 
   div(id="p2score" class="score")
     h2 
@@ -22,6 +17,8 @@ block content
       span(class="key") O
       span(class="key") L
     h1 0
+    h2(id="p2hit")
+
 
   footer
     p 
@@ -34,3 +31,18 @@ block content
         a(href="https://github.com/sambrenner/badfighter", target="_blank") GitHub
       li
         a(href="#") About
+
+  canvas(id="c")
+  img(id="fight", src="/img/fight.png", class="hide")
+  img(id="awesome", src="/img/awesome.png", class="hide")
+  img(id="superAwesome", src="/img/superAwesome.png", class="hide")
+  img(id="tubular", src="/img/tube.png", class="hide")
+  img(id="radical", src="/img/rad.png", class="hide")
+  img(id="exclaimation", src="/img/!!!.png", class="hide")
+
+
+  block scripts
+  script(type="text/javascript", src="/javascripts/plugins/jquery-2.0.3.min.js")
+  script(type="text/javascript", src="/javascripts/plugins/three.js")
+  script(type="text/javascript", src="/javascripts/plugins/physi.js")
+  script(type="text/javascript", src="/javascripts/app/main.js")
