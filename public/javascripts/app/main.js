@@ -9,13 +9,7 @@ app.main = (function(window,document) {
   var _dudeNumber = 0;
   var _awesomeTimeLength = 300;
   var _awesomeTimer = _awesomeTimeLength;
-  var fightMap = document.getElementById('fight');
-  var awesomeMap = document.getElementById('awesome');
-  var superAwesomeMap = document.getElementById('superAwesome');
-  var radMap = document.getElementById('radical');
-  var tubeMap = document.getElementById('tubular');
-  var exMap = document.getElementById('exclaimation');
-
+  var _fightMap, _awesomeMap, _superAwesomeMap, _radMap, _tubeMap, _exMap;
   var _maxAwesomeBlocks = 500;
 
   var context = document.getElementById('c').getContext('2d');
@@ -23,6 +17,13 @@ app.main = (function(window,document) {
   var _cache = function() {
     _width = window.innerWidth;
     _height = window.innerHeight;
+
+    _fightMap = document.getElementById('fight');
+    _awesomeMap = document.getElementById('awesome');
+    _superAwesomeMap = document.getElementById('superAwesome');
+    _radMap = document.getElementById('radical');
+    _tubeMap = document.getElementById('tubular');
+    _exMap = document.getElementById('exclaimation');
 
     _$p1score = $('#p1score h1');
     _$p2score = $('#p2score h1');
@@ -247,22 +248,22 @@ app.main = (function(window,document) {
       if(player.awesomeBool){
         switch (player.awesomeLevel){
           case 1:
-            _textToBlocks(player, fightMap);
+            _textToBlocks(player, _fightMap);
             break;
           case 2:
-            _textToBlocks(player, awesomeMap);
+            _textToBlocks(player, _awesomeMap);
             break;
           case 3: 
-            _textToBlocks(player, exMap);
+            _textToBlocks(player, _exMap);
             break;
             case 4: 
-            _textToBlocks(player, radMap);
+            _textToBlocks(player, _radMap);
             break;
             case 5: 
-            _textToBlocks(player, tubeMap);
+            _textToBlocks(player, _tubeMap);
             break;
             case 6: 
-            _textToBlocks(player, superAwesomeMap);
+            _textToBlocks(player, _superAwesomeMap);
             break;
         }
         player.awesomeBool = false;
