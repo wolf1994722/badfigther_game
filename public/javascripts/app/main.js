@@ -217,8 +217,8 @@ app.main = (function(window,document) {
   var _updateScores = function() {
     _$p1score.text(_p1score);
     _$p2score.text(_p2score);
-    _$p1HitCount.text("Hit Count: "+_p2.body.hitCounter);
-    _$p2HitCount.text("Hit Count: "+_p1.body.hitCounter);
+    _$p1HitCount.text(_p2.body.hitCounter + " hits");
+    _$p2HitCount.text(_p1.body.hitCounter + " hits");
   };
 
   var _resetGame = function() {
