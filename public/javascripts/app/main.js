@@ -11,12 +11,13 @@ app.main = (function(window,document) {
   var _awesomeTimer = _awesomeTimeLength;
   var _fightMap, _awesomeMap, _superAwesomeMap, _radMap, _tubeMap, _exMap;
   var _maxAwesomeBlocks = 500;
-
-  var context = document.getElementById('c').getContext('2d');
+  var _context;
 
   var _cache = function() {
     _width = window.innerWidth;
     _height = window.innerHeight;
+
+    _context = document.getElementById('c').getContext('2d');
 
     _fightMap = document.getElementById('fight');
     _awesomeMap = document.getElementById('awesome');
@@ -273,10 +274,10 @@ app.main = (function(window,document) {
 
   var _textToBlocks = function(player, map){
 
-    context.width = map.width;
-    context.height = map.height;
+    _context.width = map.width;
+    _context.height = map.height;
 
-    context.drawImage(map, 0, 0, map.width, map.height);
+    _context.drawImage(map, 0, 0, map.width, map.height);
 
     var position = player.body.position.clone();
     position.y+=60;
@@ -284,7 +285,7 @@ app.main = (function(window,document) {
 
     for(var x = 0; x<map.width; x++){
     for(var y = 0; y<map.height; y++){
-      var imgData = context.getImageData(x, y, 1, 1);
+      var imgData = _context.getImageData(x, y, 1, 1);
       if(imgData.data[0] > 0){
         
       var pixel = new Physijs.BoxMesh(
