@@ -97,7 +97,9 @@ app.main = (function(window,document) {
     player.frontArm.position.set(player.body.position.x, player.body.position.y, player.body.position.z + 35)
     player.frontArm.castShadow = true;
     player.frontArm.name = _dudeNumber;
+    player.frontArm.isArm = true;
 
+    player.frontArm.awesomePunchesLanded = 0;
 
     player.rearArm = new Physijs.BoxMesh(
       new THREE.CubeGeometry(10,60,10),
@@ -106,7 +108,10 @@ app.main = (function(window,document) {
     player.rearArm.position.set(player.body.position.x, player.body.position.y, player.body.position.z - 35)
     player.rearArm.castShadow = true;
     player.rearArm.name = _dudeNumber;
+    player.rearArm.isArm = true;
 
+
+    player.rearArm.awesomePunchesLanded = 0;
 
     player.body.addEventListener( 'collision', handleCollision );
 
@@ -145,11 +150,11 @@ app.main = (function(window,document) {
 
   var handleCollision = function(collided_with, linearVelocity, angularVelocity) {
 
-    if(this.name != collided_with.name && collided_with.name != "" && collided_with.name != "rain" && collided_with.name != "awesomeText" )
+    if(this.name != collided_with.name && collided_with.isArm){//collided_with.name != "" && collided_with.name != "rain" && collided_with.name != "awesomeText" ){
       this.hitCounter++;
+    }
 
   }
-
 
   var _addListeners = function() {
     $(window).keydown(function(e) {
@@ -217,8 +222,8 @@ app.main = (function(window,document) {
   var _updateScores = function() {
     _$p1score.text(_p1score);
     _$p2score.text(_p2score);
-    _$p1HitCount.text("Hit Count: "+_p1.body.hitCounter);
-    _$p2HitCount.text("Hit Count: "+_p2.body.hitCounter);
+    _$p1HitCount.text("Hit Count: "+_p2.body.hitCounter);
+    _$p2HitCount.text("Hit Count: "+_p1.body.hitCounter);
   };
 
   var _resetGame = function() {
@@ -228,8 +233,10 @@ app.main = (function(window,document) {
     _resetPlayer(_p2);
   };
 
-  var _howAwesome = function(player) {
-      if(player.body.hitCounter/20 > player.awesomeLevel){
+  var _howAwesome = function(player, player2) {
+
+
+      if((player2.body.hitCounter)/20 > player.awesomeLevel){
         player.awesomeLevel++;
         player.awesomeBool = true;
       }
@@ -290,6 +297,8 @@ app.main = (function(window,document) {
     
     player.body.hitCounter = 0;
     player.awesomeLevel = 1;
+    player.frontArm.awesomePunchesLanded = 0;
+    player.rearArm.awesomePunchesLanded = 0;
 
     player.body.rotation = new THREE.Euler(0,0,0,'XYZ');
     player.frontArm.rotation = new THREE.Euler(0,0,0,'XYZ');
@@ -406,8 +415,8 @@ app.main = (function(window,document) {
       _newRound = false;
     }
 
-    _howAwesome(_p1);
-    _howAwesome(_p2);
+    _howAwesome(_p1, _p2);
+    _howAwesome(_p2, _p1);
     _removeTheFallen();
     _checkBounds();
 
