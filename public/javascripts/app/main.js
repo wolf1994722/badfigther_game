@@ -9,9 +9,10 @@ app.main = (function(window,document) {
   var _dudeNumber = 0;
   var _awesomeTimeLength = 300;
   var _awesomeTimer = _awesomeTimeLength;
-  var _fightMap, _awesomeMap, _superAwesomeMap, _radMap, _tubeMap, _exMap;
+  var _fightMap, _awesomeMap, _superAwesomeMap, _radMap, _tubeMap, _exMap, _countdown3Map, _countdown2Map, _countdown1Map;
   var _maxAwesomeBlocks = 500;
   var _context;
+  var _controlsEnabled = false;
 
   var _cache = function() {
     _width = window.innerWidth;
@@ -25,6 +26,9 @@ app.main = (function(window,document) {
     _radMap = document.getElementById('radical');
     _tubeMap = document.getElementById('tubular');
     _exMap = document.getElementById('exclaimation');
+    _countdown1Map = document.getElementById('countdown1');
+    _countdown2Map = document.getElementById('countdown2');
+    _countdown3Map = document.getElementById('countdown3');
 
     _$p1score = $('#p1score h1');
     _$p2score = $('#p2score h1');
@@ -164,43 +168,28 @@ app.main = (function(window,document) {
 
   var _addListeners = function() {
     $(window).keydown(function(e) {
-      switch(e.keyCode) {
-        case 65: //a
-          //_activateMotor(_p1.frontConstraint, _p2.body.position);
-          _applyImpulse(_p1.frontArm, _p2.frontArm.position);
-          break;
-        case 81: //q
-          //_activateMotor(_p1.rearConstraint, _p2.body.position);
-          _applyImpulse(_p1.rearArm, _p2.rearArm.position);
-          break;
-        case 76: //l
-          //_activateMotor(_p2.frontConstraint, _p1.body.position);
-          _applyImpulse(_p2.frontArm, _p1.frontArm.position);
-          break;
-        case 79: //o
-          //_activateMotor(_p2.rearConstraint, _p1.body.position);
-          _applyImpulse(_p2.rearArm, _p1.rearArm.position);
-          break;
-        case 82:
-          _makeItRain();
-          break;
-      }
-    });
-
-    $(window).keyup(function(e) {
-      switch(e.keyCode) {
-        case 65: //a
-          _p1.frontConstraint.disableMotor();
-          break;
-        case 81: //q
-          _p1.rearConstraint.disableMotor();
-          break;
-        case 76: //l
-          _p2.frontConstraint.disableMotor();
-          break;
-        case 79: //o
-          _p2.rearConstraint.disableMotor();
-          break;
+      if(_controlsEnabled) {
+        switch(e.keyCode) {
+          case 65: //a
+            //_activateMotor(_p1.frontConstraint, _p2.body.position);
+            _applyImpulse(_p1.frontArm, _p2.frontArm.position);
+            break;
+          case 81: //q
+            //_activateMotor(_p1.rearConstraint, _p2.body.position);
+            _applyImpulse(_p1.rearArm, _p2.rearArm.position);
+            break;
+          case 76: //l
+            //_activateMotor(_p2.frontConstraint, _p1.body.position);
+            _applyImpulse(_p2.frontArm, _p1.frontArm.position);
+            break;
+          case 79: //o
+            //_activateMotor(_p2.rearConstraint, _p1.body.position);
+            _applyImpulse(_p2.rearArm, _p1.rearArm.position);
+            break;
+          case 82:
+            _makeItRain();
+            break;
+        }
       }
     });
   };
@@ -240,30 +229,26 @@ app.main = (function(window,document) {
   };
 
   var _howAwesome = function(player, player2) {
-
-
       if((player2.body.hitCounter)/20 > player.awesomeLevel){
         player.awesomeLevel++;
         player.awesomeBool = true;
       }
+
       if(player.awesomeBool){
         switch (player.awesomeLevel){
-          case 1:
-            _textToBlocks(player, _fightMap);
-            break;
           case 2:
             _textToBlocks(player, _awesomeMap);
             break;
           case 3: 
             _textToBlocks(player, _exMap);
             break;
-            case 4: 
+          case 4: 
             _textToBlocks(player, _radMap);
             break;
-            case 5: 
+          case 5: 
             _textToBlocks(player, _tubeMap);
             break;
-            case 6: 
+          case 6: 
             _textToBlocks(player, _superAwesomeMap);
             break;
         }
@@ -422,6 +407,23 @@ app.main = (function(window,document) {
 
   }
 
+  var _beginCountdown = function() {
+    var maps = [_fightMap, _countdown1Map, _countdown2Map, _countdown3Map];
+    var count = 3;
+
+    var countdownInterval = setInterval(function() {
+      _textToBlocks(_p1, maps[count]);
+      _textToBlocks(_p2, maps[count]);
+
+      if(count == 0) {
+        clearInterval(countdownInterval);
+        _controlsEnabled = true;
+      }
+      else
+        count--;
+    }, 2000);
+  }
+
   var _render = function() {
     if(_newRound) {
       _enablePlayer(_p1);
@@ -450,6 +452,8 @@ app.main = (function(window,document) {
       _initThree();
       _fillScene();
       _addListeners();
+      
+      setTimeout(_beginCountdown, 2000);
       
       requestAnimationFrame(_render);
     }
