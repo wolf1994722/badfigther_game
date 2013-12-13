@@ -34,7 +34,7 @@ app.main = (function(window,document) {
     _$p2score = $('#p2score h1');
     _$p1HitCount = $('#p1hit');
     _$p2HitCount = $('#p2hit');
-  }
+  };
 
   var _initPhysiJS = function() {
     Physijs.scripts.worker = '/javascripts/plugins/physijs_worker.js';
@@ -74,7 +74,7 @@ app.main = (function(window,document) {
       new THREE.MeshLambertMaterial({color:0xEFEFEF}),
       0
     );
-    //floor.rotation.x = .1;
+    
     floor.receiveShadow = true;
 
     _makeDude(_p1, 0xFF3300, new THREE.Vector3(150,200,0));
@@ -82,7 +82,7 @@ app.main = (function(window,document) {
 
     _scene.add(_lightTop);
     _scene.add(floor);
-  }
+  };
 
   var _makeDude = function(player, color, position) {
     _dudeNumber++;
@@ -119,7 +119,6 @@ app.main = (function(window,document) {
     player.rearArm.castShadow = true;
     player.rearArm.name = _dudeNumber;
     player.rearArm.isArm = true;
-
 
     player.rearArm.awesomePunchesLanded = 0;
 
@@ -159,12 +158,10 @@ app.main = (function(window,document) {
   };
 
   var handleCollision = function(collided_with, linearVelocity, angularVelocity) {
-
     if(this.name != collided_with.name && collided_with.isArm){//collided_with.name != "" && collided_with.name != "rain" && collided_with.name != "awesomeText" ){
       this.hitCounter++;
     }
-
-  }
+  };
 
   var _addListeners = function() {
     $(window).keydown(function(e) {
@@ -255,10 +252,9 @@ app.main = (function(window,document) {
         player.awesomeBool = false;
         _awesomeTimer = _awesomeTimeLength;
     }
-  }
+  };
 
   var _textToBlocks = function(player, map){
-
     _context.width = map.width;
     _context.height = map.height;
 
@@ -269,26 +265,24 @@ app.main = (function(window,document) {
     position.x-=(map.width/2)*10;
 
     for(var x = 0; x<map.width; x++){
-    for(var y = 0; y<map.height; y++){
-      var imgData = _context.getImageData(x, y, 1, 1);
-      if(imgData.data[0] > 0){
-        
-      var pixel = new Physijs.BoxMesh(
-        new THREE.CubeGeometry(10,10,10),
-        player.body.material
-      );
+      for(var y = 0; y<map.height; y++){
+        var imgData = _context.getImageData(x, y, 1, 1);
+        if(imgData.data[0] > 0){
+          var pixel = new Physijs.BoxMesh(
+            new THREE.CubeGeometry(10,10,10),
+            player.body.material
+          );
 
-     pixel.name = "awesomeText";
-     pixel.receiveShadow = true;
-     pixel.castShadow = true;
-     pixel.position.set(position.x+((map.width-x)*10),position.y+((map.height-y)*10),position.z);
-     _scene.add(pixel);
-
+          pixel.name = "awesomeText";
+          pixel.receiveShadow = true;
+          pixel.castShadow = true;
+          pixel.position.set(position.x+((map.width-x)*10),position.y+((map.height-y)*10),position.z);
+          
+          _scene.add(pixel);
+        }
       }
     }
-  }
-
-  }
+  };
 
   var _resetPlayer = function(player) {
     player.body.position.set(player.startPosition.x, player.startPosition.y, player.startPosition.z);
@@ -330,7 +324,7 @@ app.main = (function(window,document) {
 
     player.rearArm.__dirtyPosition = true;
     player.rearArm.__dirtyRotation = true;
-  }
+  };
 
   var _enablePlayer = function(player) {
     player.body.__dirtyPosition = false;
@@ -353,20 +347,18 @@ app.main = (function(window,document) {
   };
 
   var _makeItRain = function(){
+    for(var i=0;i<20;i++){
+      var rain = new Physijs.BoxMesh(
+        new THREE.CubeGeometry(10,10,10),
+        new THREE.MeshLambertMaterial({color:0xffffff})
+      );
+      rain.name = "rain";
+      rain.receiveShadow = true;
+      rain.position.set(i,50,0);
 
-  for(var i=0;i<20;i++){
-    var rain = new Physijs.BoxMesh(
-      new THREE.CubeGeometry(10,10,10),
-      new THREE.MeshLambertMaterial({color:0xffffff})
-    );
-    rain.name = "rain";
-    rain.receiveShadow = true;
-    rain.position.set(i,50,0);
-
-    _scene.add(rain);
-  }
-
-  }
+      _scene.add(rain);
+    }
+  };
 
   // var _getAveragePointOfInterest = function(){
 
@@ -383,9 +375,9 @@ app.main = (function(window,document) {
   // }
 
   var _removeTheFallen = function(){
-
     var numAwesomes = 0;
-   for(var i=0;i<_scene.children.length;i++){
+    
+    for(var i=0;i<_scene.children.length;i++){
       if(_scene.children[i].name == "awesomeText")numAwesomes++;
       if( _scene.children[i].position.y < -100 && _scene.children[i].name == "awesomeText" )_scene.remove(_scene.children[i]);
     }
@@ -419,7 +411,7 @@ app.main = (function(window,document) {
       else
         count--;
     }, 2000);
-  }
+  };
 
   var _render = function() {
     if(_newRound) {
@@ -454,7 +446,7 @@ app.main = (function(window,document) {
       
       requestAnimationFrame(_render);
     }
-  }
+  };
 
   return self;
 })(this, this.document);
