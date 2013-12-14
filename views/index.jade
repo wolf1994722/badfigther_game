@@ -19,6 +19,35 @@ block content
     h1 0
     h2(id="p2hit")
 
+  section(id="about")
+    h2 Badfighter
+    p 
+      | Created by 
+      a(href="http://www.samjbrenner.com", target="_blank") Sam Brenner
+      |  and 
+      a(href="http://michaelpallison.com/", target="_blank") Mike Allison
+      |  for the Interactive 3D workgroup at 
+      a(href="http://itp.nyu.edu/", target="_blank") ITP
+      | . We built this using 
+      a(href="http://threejs.org", target="_blank") Three.js
+      |  and 
+      a(href="http://chandlerprall.github.io/Physijs/", target="_blank") Physijs
+      | . Please fork our 
+      a(href="https://github.com/sambrenner/badfighter", target="_blank") GitHub repo
+      |  and help make the game better!
+    p
+      | Relevant and inspiring things are 
+      a(href="http://www.foddy.net/Athletics.html", target="_blank") QWOP
+      | , 
+      a(href="http://www.gravitysensation.com/sumotori/", target="_blank") Sumoroti Dreams
+      | , 
+      a(href="https://www.youtube.com/watch?v=AemxS2Xtbo8", target="_blank") The Life and Times of Qarpess
+      |  and 
+      a(href="https://www.youtube.com/watch?v=4-620xx7yTo", target="_blank") Carmageddon
+      | .
+
+
+
 
   footer
     p 
@@ -30,7 +59,7 @@ block content
       li
         a(href="https://github.com/sambrenner/badfighter", target="_blank") GitHub
       li
-        a(href="#") About
+        a(href="#", id="about_btn") About
 
   canvas(id="c")
   img(id="fight", src="/img/fight.png", class="hide")

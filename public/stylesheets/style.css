@@ -1,18 +1,25 @@
+html, body, #container { height: 100%; width: 100%; }
 body { background-color: #000; font-family: Comic Sans, Comic Sans MS, cursive;}
+
+a { color: #000; }
 
 .score { position: absolute; top: 20px; }
 .score h1 { font-size: 300%; font-weight: bold; }
 .score h2 { margin-bottom: 12px; }
-.hide { visibility:hidden; }
+.hide { display: none; }
 
 .key { background-color: #E3E3E3; border-radius: 6px; display: inline-block; height: 18px; margin: 0 6px; padding: 6px; text-align: center; width: 18px; }
 
 #p1score { color: #F30; left: 20px; }
 #p2score { color: #03F; right: 20px; text-align: right; }
-#c { display:none;}
+#c { display:none; }
+
+#about { background-color: rgba(255,255,255,0.8); display: none; padding: 30px; position: absolute; width: 400px; }
+#about.visible { display: inline-block; }
+#about h2 { font-size: 130%; font-weight: bold; margin-bottom: 8px; }
+#about p { line-height: 120%; margin-bottom: 8px; }
 
 footer { background-color: rgba(255,255,255,0.5); bottom: 0; padding: 4px 0; position: absolute; width: 100%; }
-footer a { color: #000; }
 footer p { float: left; margin-left: 20px; }
 footer ul { float: right; margin-right: 20px; }
 footer ul li { display: inline; margin-left: 12px; }

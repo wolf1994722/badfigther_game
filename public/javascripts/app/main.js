@@ -5,7 +5,8 @@ app.main = (function(window,document) {
   var _renderer, _scene, _camera, _newRound = false;
   var _lightTop;
   var _p1 = {}, _p2 = {};
-  var _p1score = 0, _p2score = 0, _$p1score, _$p2score;
+  var _p1score = 0, _p2score = 0, _$p1score, _$p2score, _$p1HitCount, _$p2HitCount;
+  var _$aboutBtn, _$aboutModal;
   var _dudeNumber = 0;
   var _awesomeTimeLength = 300;
   var _awesomeTimer = _awesomeTimeLength;
@@ -34,6 +35,8 @@ app.main = (function(window,document) {
     _$p2score = $('#p2score h1');
     _$p1HitCount = $('#p1hit');
     _$p2HitCount = $('#p2hit');
+    _$aboutBtn = $('#about_btn');
+    _$aboutModal = $('#about');
   };
 
   var _initPhysiJS = function() {
@@ -189,6 +192,31 @@ app.main = (function(window,document) {
         }
       }
     });
+
+    _$aboutBtn.on('click', function() {
+      _$aboutModal.toggleClass('visible');
+      _handleResize();
+    });
+
+    $(window).on('resize', _handleResize);
+
+    $('#container').on('click', function() {
+        if(_$aboutModal.hasClass('visible')) _$aboutModal.removeClass('visible');
+      });
+  };
+
+  var _handleResize = function() {
+    _width = window.innerWidth;
+    _height = window.innerHeight;
+
+    _$aboutModal
+      .css('left', window.innerWidth / 2 - _$aboutModal.width() / 2)
+      .css('top', window.innerHeight / 2 - _$aboutModal.height() / 2);
+
+    _camera.aspect = _width / _height;
+    _camera.updateProjectionMatrix();
+    
+    _renderer.setSize(_width, _height);
   };
 
   var _checkBounds = function() {
@@ -441,6 +469,7 @@ app.main = (function(window,document) {
       _initThree();
       _fillScene();
       _addListeners();
+      _handleResize();
       
       setTimeout(_beginCountdown, 2000);
       
